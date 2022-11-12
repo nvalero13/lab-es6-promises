@@ -42,12 +42,15 @@ getInstruction('mashedPotatoes', 0, (step0) => {
             document.querySelector("#mashedPotatoes").innerHTML += `<li>${step5}</li>`
             getInstruction('mashedPotatoes', 6, (step6) => {
               document.querySelector("#mashedPotatoes").innerHTML += `<li>${step6}</li>`
-            }, (err) => document.querySelector("#mashedPotatoes").innerHTML += `<li>Mashed potatoes are ready!</li>`)
-          }, (err) => document.querySelector("#mashedPotatoes").innerHTML += `<li>Mashed potatoes are ready!</li>`)
-        }, (err) => document.querySelector("#mashedPotatoes").innerHTML += `<li>Mashed potatoes are ready!</li>`)
-      }, (err) => document.querySelector("#mashedPotatoes").innerHTML += `<li>Mashed potatoes are ready!</li>`)
-    }, (err) => document.querySelector("#mashedPotatoes").innerHTML += `<li>Mashed potatoes are ready!</li>`)
-  }, (err) => document.querySelector("#mashedPotatoes").innerHTML += `<li>Mashed potatoes are ready!</li>`)
+            })
+          }, (err) => {
+            document.querySelector("#mashedPotatoes").innerHTML += `<li>Mashed potatoes are ready!</li>`
+            document.querySelector("#mashedPotatoesImg").removeAttribute("hidden")
+          })
+        })
+      })
+    })
+  })
 });
 
 // Iteration 2 - using promises
@@ -86,20 +89,24 @@ obtainInstruction('steak', 0)
 })
 .catch( (err) => {
   if (err === "Instruction step does not exist!") { 
+    document.querySelector("#steakImg").removeAttribute("hidden")
     document.querySelector("#steak").innerHTML += `<li>Steak is ready!</li>`}
   })
 
 // Iteration 3 using async/await
 async function makeBroccoli() {
   let count = 0;
-  let error = false
-  while(!error) {
+  let done = false
+  while(!done) {
     try {
       document.querySelector("#broccoli").innerHTML += `<li>${await obtainInstruction("broccoli", count)}</li>`
       count++
     } catch (err) {
+      if(err = "Instruction step does not exist!") {
       document.querySelector("#broccoli").innerHTML += `<li>Broccoli is ready!</li>`
-      error = true
+      document.querySelector("#broccoliImg").removeAttribute("hidden")
+      done = true
+      }
     }
   }
 }
@@ -108,4 +115,14 @@ makeBroccoli()
 
 
 // Bonus 2 - Promise all
-// ...
+let promises = []
+for(let i = 0; i < 8; i++) {
+  promises.push(obtainInstruction('brusselsSprouts', i))
+}
+
+Promise.all(promises).then((steps) => {
+  steps.forEach((step) => document.querySelector("#brusselsSprouts").innerHTML += `<li>${step}</li>`)
+  document.querySelector("#brusselsSprouts").innerHTML += `<li>Brussels sprouts are ready!</li>`;
+   document.querySelector("#brusselsSproutsImg").removeAttribute("hidden");
+})
+
